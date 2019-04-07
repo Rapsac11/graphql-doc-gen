@@ -1,0 +1,28 @@
+{
+  "name": "graphql-doc-gen",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "develop": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "generate": "node -r @babel/register scripts/generate_pages.js"
+  },
+  "dependencies": {
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
+    "@material-ui/styles": "^3.0.0-alpha.10",
+    "gatsby": "latest",
+    "gatsby-plugin-page-creator": "^2.0.12",
+    "jss": "latest",
+    "node-fetch": "^2.3.0",
+    "prop-types": "latest",
+    "react": "^16.8.6",
+    "react-dom": "latest",
+    "react-jss": "^8.1.0"
+  },
+  "devDependencies": {
+    "@babel/register": "^7.4.0",
+    "babel-preset-gatsby": "^0.1.11"
+  }
+}
