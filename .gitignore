@@ -13,3 +13,4 @@ yarn-error.log*
 /public
 /.cache
 /src/pages/generated/*
+/src/util/dataObject.js
