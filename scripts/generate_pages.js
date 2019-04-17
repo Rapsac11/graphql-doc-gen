@@ -23,6 +23,17 @@ function a(endpoint){
             __schema {
               types {
                 name
+                inputFields{
+                  name
+                  type {
+                    name
+                    kind
+                    ofType {
+                      name
+                      kind
+                    }
+                  }
+                }
                 fields {
                   name
             			args {
