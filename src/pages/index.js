@@ -54,12 +54,92 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const whiteSpacePre = {
+  whiteSpace: 'pre-wrap'
+}
+
+
+const type = {"name":"Boolean","inputFields":null,"fields":null}
+
+const parser = {
+  0: () => type.fields.map(field => {
+    let args = []
+    field.args.map(arg => {
+      let status = arg.type.kind == "NON_NULL" ? '!': ''
+      let input = arg.type.ofType ? arg.type.ofType.name + status : arg.type.name
+      let argString = arg.name + ': ' + input
+      args.push(argString)
+    })
+    let inputs = args.length ? '(' + args.join(", ") + ')' : ''
+    let output = field.type.name ? field.type.name : field.type.ofType.name
+    if (field.type.kind == "LIST"){
+      output = '[' + output + ']'
+    }
+    let string = '  ' + field.name + inputs + ': ' + output
+    return string
+  }),
+  1: () => type.inputFields.map(inputfield => {
+    let output = inputfield.type.ofType ? inputfield.type.ofType.name : inputfield.type.name
+    if (inputfield.type.kind == "LIST"){
+      output = '[' + output + ']'
+    }
+    let string = '  ' + inputfield.name + ': ' + output
+    return string
+  }),
+  catch: () => null
+}
+
+let options = ['fields', 'inputFields']
+
+let selector = () => {
+  let parser = 'catch'
+  options.forEach((option, i) =>{
+    if (type[option]){
+      parser = i
+    }
+  })
+  return parser
+}
+
+let fields = parser[selector()]()
+
+let formatted = []
+let buffer = ''
+let counter = 0
+
+const indentations = n => {
+  let indentation = ''
+  let indentationDepth = '  '
+  Array(n).fill().forEach(() => {
+    indentation = indentation + indentationDepth
+  })
+  return indentation
+}
+
 function Main(props) {
   const { container } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [schemaData, setSchemaData] = useState([])
+
+  JSON.stringify(type).split('').forEach(letter => {
+    if (letter == '{'){
+      buffer = buffer + letter
+      formatted.push(indentations(counter) + buffer)
+      buffer = ''
+      counter++
+    } else if (letter == '}'){
+      if(buffer == ''){
+        formatted.push(indentations(counter) + buffer)
+        buffer = ''
+      }
+      counter--
+      formatted.push(indentations(counter) + letter)
+    } else {
+      buffer = buffer + letter
+    }
+  })
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
@@ -134,6 +214,18 @@ function Main(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <div>
+          <span style={whiteSpacePre}>{"Type Query {"}</span>
+        </div>
+        {
+          fields && fields.map((textRow, i) =>
+            <div key={i}>
+              <span key={i + 'span'} style={whiteSpacePre}>{textRow}</span>
+            </div>)
+        }
+        <div>
+          <span style={whiteSpacePre}>{"}"}</span>
+        </div>
       </main>
     </div>
   );
