@@ -19,6 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import { navigate } from "gatsby"
 import dataObject from '../util/dataObject'
+import { parse } from '../../scripts/utils.js'
 
 const drawerWidth = 240;
 
@@ -58,50 +59,9 @@ const whiteSpacePre = {
   whiteSpace: 'pre-wrap'
 }
 
+const type = {"name":"Query","inputFields":null,"fields":[{"name":"createUserAndListProjects","args":[{"name":"auth0Info","type":{"name":"Auth0Info","kind":"INPUT_OBJECT","ofType":null}}],"type":{"name":"UserAndProjects","kind":"OBJECT","ofType":null}},{"name":"errors","args":[],"type":{"name":null,"kind":"LIST","ofType":{"name":"Error","kind":"OBJECT"}}},{"name":"hello","args":[],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"String","kind":"SCALAR"}}},{"name":"isSuperAdmin","args":[],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Boolean","kind":"SCALAR"}}},{"name":"options","args":[],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Options","kind":"OBJECT"}}},{"name":"project","args":[{"name":"slug","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}},{"name":"auth0Info","type":{"name":"Auth0Info","kind":"INPUT_OBJECT","ofType":null}},{"name":"groupId","type":{"name":"ID","kind":"SCALAR","ofType":null}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Project","kind":"OBJECT"}}},{"name":"module","args":[{"name":"id","type":{"name":"ID","kind":"SCALAR","ofType":null}},{"name":"slug","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}}],"type":{"name":"Module","kind":"OBJECT","ofType":null}},{"name":"group","args":[{"name":"id","type":{"name":"ID","kind":"SCALAR","ofType":null}},{"name":"slug","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}}],"type":{"name":"Group","kind":"OBJECT","ofType":null}},{"name":"users","args":[{"name":"slug","type":{"name":"String","kind":"SCALAR","ofType":null}}],"type":{"name":null,"kind":"LIST","ofType":{"name":"User","kind":"OBJECT"}}},{"name":"user","args":[{"name":"auth0Info","type":{"name":"Auth0Info","kind":"INPUT_OBJECT","ofType":null}}],"type":{"name":"User","kind":"OBJECT","ofType":null}},{"name":"userGroups","args":[{"name":"auth0Id","type":{"name":"String","kind":"SCALAR","ofType":null}}],"type":{"name":"JSON","kind":"SCALAR","ofType":null}},{"name":"authorizeUser","args":[{"name":"url","type":{"name":"String","kind":"SCALAR","ofType":null}}],"type":{"name":"JSON","kind":"SCALAR","ofType":null}},{"name":"assignableUserList","args":[{"name":"url","type":{"name":"String","kind":"SCALAR","ofType":null}}],"type":{"name":null,"kind":"LIST","ofType":{"name":"User","kind":"OBJECT"}}},{"name":"viewer","args":[],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"User","kind":"OBJECT"}}},{"name":"invitation","args":[{"name":"invite_id","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}},{"name":"accepted","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"Boolean","ofType":null}}}],"type":{"name":"Invitations","kind":"OBJECT","ofType":null}},{"name":"moduleTypes","args":[],"type":{"name":null,"kind":"LIST","ofType":{"name":null,"kind":"NON_NULL"}}}]}
 
-const type = {"name":"Boolean","inputFields":null,"fields":null}
-
-const parser = {
-  0: () => type.fields.map(field => {
-    let args = []
-    field.args.map(arg => {
-      let status = arg.type.kind == "NON_NULL" ? '!': ''
-      let input = arg.type.ofType ? arg.type.ofType.name + status : arg.type.name
-      let argString = arg.name + ': ' + input
-      args.push(argString)
-    })
-    let inputs = args.length ? '(' + args.join(", ") + ')' : ''
-    let output = field.type.name ? field.type.name : field.type.ofType.name
-    if (field.type.kind == "LIST"){
-      output = '[' + output + ']'
-    }
-    let string = '  ' + field.name + inputs + ': ' + output
-    return string
-  }),
-  1: () => type.inputFields.map(inputfield => {
-    let output = inputfield.type.ofType ? inputfield.type.ofType.name : inputfield.type.name
-    if (inputfield.type.kind == "LIST"){
-      output = '[' + output + ']'
-    }
-    let string = '  ' + inputfield.name + ': ' + output
-    return string
-  }),
-  catch: () => null
-}
-
-let options = ['fields', 'inputFields']
-
-let selector = () => {
-  let parser = 'catch'
-  options.forEach((option, i) =>{
-    if (type[option]){
-      parser = i
-    }
-  })
-  return parser
-}
-
-let fields = parser[selector()]()
+let fields = parse(type)
 
 let formatted = []
 let buffer = ''
