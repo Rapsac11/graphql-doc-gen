@@ -1,44 +1,67 @@
-export const parse = type => {
+const indentations = n => {
+  let indentation = ''
+  let indentationCount = n || 1
+  let indentationDepth = '  '
+  Array(indentationCount).fill().forEach(() => {
+    indentation = indentation + indentationDepth
+  })
+  return indentation
+}
 
-  const parser = {
-    0: () => type.fields.map(field => {
-      let args = []
-      field.args.map(arg => {
-        let status = arg.type.kind == "NON_NULL" ? '!': ''
-        let input = arg.type.ofType ? arg.type.ofType.name + status : arg.type.name
-        let argString = arg.name + ': ' + input
-        args.push(argString)
-      })
-      let inputs = args.length ? '(' + args.join(", ") + ')' : ''
-      let output = field.type.name ? field.type.name : field.type.ofType.name
-      if (field.type.kind == "LIST"){
-        output = '[' + output + ']'
-      }
-      let string = '  ' + field.name + inputs + ': ' + output
-      return string
-    }),
-    1: () => type.inputFields.map(inputfield => {
-      let output = inputfield.type.ofType ? inputfield.type.ofType.name : inputfield.type.name
-      if (inputfield.type.kind == "LIST"){
-        output = '[' + output + ']'
-      }
-      let string = '  ' + inputfield.name + ': ' + output
-      return string
-    }),
-    catch: () => null
-  }
-
-  const options = ['fields', 'inputFields']
-
-  const selector = () => {
-    let parser = 'catch'
-    options.forEach((option, i) =>{
-      if (type[option]){
-        parser = i
-      }
+const parser = {
+  0: (type, n) => type.fields.map(field => {
+    let args = []
+    let chunks = []
+    chunks.push(indentations(n) + field.name)
+    field.args.map(arg => {
+      let status = arg.type.kind == "NON_NULL" ? '!': ''
+      let input = arg.type.ofType ? arg.type.ofType.name + status : arg.type.name
+      args.push(arg.name + ': ')
+      args.push(input)
     })
-    return parser
-  }
+    if (args.length){
+      chunks.push('(')
+      args.map((d, i) => {
+        chunks.push(d)
+        if((i % 2 !== 0) && (i + 1) !== args.length){
+          chunks.push(', ')
+        }
+      })
+      chunks.push(')')
+    }
+    let output = field.type.name ? field.type.name : field.type.ofType.name
+    if (field.type.kind == "LIST"){
+      output = '[' + output + ']'
+    }
+    chunks.push(': ' + output)
+    return chunks
+  }),
+  1: (type, n) => type.inputFields.map(inputfield => {
+    let args = []
+    let chunks = []
+    chunks.push(indentations(n) + inputfield.name)
+    let output = inputfield.type.ofType ? inputfield.type.ofType.name : inputfield.type.name
+    if (inputfield.type.kind == "LIST"){
+      output = '[' + output + ']'
+    }
+    chunks.push(': ' + output)
+    return chunks
+  }),
+  catch: (type) => null
+}
 
-  return parser[selector()]()
+const options = ['fields', 'inputFields']
+
+const selector = type => {
+  let parser = 'catch'
+  options.forEach((option, i) =>{
+    if (type[option]){
+      parser = i
+    }
+  })
+  return parser
+}
+
+export const parse = (type, n) => {
+  return parser[selector(type)](type,n)
 }
