@@ -5,6 +5,15 @@ import { template } from '../src/util/page_template.js'
 
 const endpoint = process.argv[2]
 
+const baseTypes = [
+  'String',
+  'Boolean',
+  'ID',
+  'Int',
+  'JSON',
+  'Float'
+]
+
 function a(endpoint){
 
   console.log('fetching endpoint data from: ', endpoint)
@@ -92,10 +101,12 @@ function a(endpoint){
         stream.end();
       })
     })
+    let filteredData = texts[0]
+    filteredData.data['__schema'].types = filteredData.data['__schema'].types.filter(type => !baseTypes.includes(type.name))
     let dataObjectStream = fs.createWriteStream('src/util/dataObject.js');
     dataObjectStream.once('open', function(fd) {
       dataObjectStream.write('export default');
-      dataObjectStream.write(JSON.stringify(texts[0].data));
+      dataObjectStream.write(JSON.stringify(filteredData.data));
       dataObjectStream.end();
     })
   })

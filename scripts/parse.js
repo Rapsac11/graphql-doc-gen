@@ -33,7 +33,8 @@ const parser = {
     if (field.type.kind == "LIST"){
       output = '[' + output + ']'
     }
-    chunks.push(': ' + output)
+    chunks.push(': ')
+    chunks.push(output)
     return chunks
   }),
   1: (type, n) => type.inputFields.map(inputfield => {
@@ -44,7 +45,8 @@ const parser = {
     if (inputfield.type.kind == "LIST"){
       output = '[' + output + ']'
     }
-    chunks.push(': ' + output)
+    chunks.push(': ')
+    chunks.push(output)
     return chunks
   }),
   catch: (type) => null
