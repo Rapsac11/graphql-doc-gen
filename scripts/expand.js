@@ -24,9 +24,8 @@ export const expand = (name, i, j, fields, dataObject) => {
           return {
             text: chunk,
             collapse: {
-              start:[i,j],
-              end:[i+parsedType.length, 0],
               name: type.name,
+              chunkPosition: j,
               offset: offset,
               length: parsedType.length
             }
