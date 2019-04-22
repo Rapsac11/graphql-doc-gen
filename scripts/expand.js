@@ -4,7 +4,6 @@ export const expand = (name, i, j, fields, dataObject) => {
   let data
    dataObject['__schema'].types.map(type => {
     if (type.name == name.replace('!','')){
-      console.log('type', type)
       let partA = []
       let partB = ['  ']
       fields[i].forEach((d, index) =>{
