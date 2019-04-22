@@ -87,8 +87,6 @@ function Main(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [schemaData, setSchemaData] = useState([])
-  const [expandedRows, setExpandedRows] = useState([])
   const [fields, updateFields] = useState(parse(type, 1))
 
   function handleDrawerToggle() {

@@ -69,15 +69,13 @@ const textLine = {
 
 const type = ${type}
 
-let fields = parse(type)
-
 function ${name}(props) {
-
   const { container } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [schemaData, setSchemaData] = useState([])
+  const [fields, updateFields] = useState(parse(type, 1))
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
@@ -120,7 +118,6 @@ function ${name}(props) {
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
             container={container}
@@ -160,16 +157,26 @@ function ${name}(props) {
             fields && fields.map((textRow, i) =>
               <div key={i} style={textLine}>
                 {
-                textRow.map((chunk, j)=>
-                  <span
-                    key={j + 'span'}
-                    style={whiteSpacePre}
-                    onClick={() => expand(chunk)}
-                    >
-                    {chunk}
-                  </span>
-                )
-              }
+                  textRow.map((chunk, j) => {
+                    let item, args, clickFunction
+                    if (typeof chunk == 'string'){
+                      item = chunk
+                      args = [item, i, j, fields, dataObject]
+                      clickFunction = expand
+                    } else {
+                      item = chunk.text
+                      args = [chunk.collapse, fields, i]
+                      clickFunction = collapse
+                    }
+                      return <span
+                        key={j + 'span'}
+                        style={whiteSpacePre}
+                        onClick={() => updateFields(clickFunction(...args))}
+                        >
+                        {item}
+                      </span>
+                  })
+                }
               </div>
             )
           }
