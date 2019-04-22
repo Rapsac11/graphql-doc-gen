@@ -19,7 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import { navigate } from "gatsby"
 import dataObject from '../util/dataObject'
-import { parse } from '../../scripts/utils.js'
+import { parse, expand, collapse } from '../../scripts'
 
 const drawerWidth = 240;
 
@@ -59,9 +59,15 @@ const whiteSpacePre = {
   whiteSpace: 'pre-wrap'
 }
 
-const type = {"name":"Query","inputFields":null,"fields":[{"name":"createUserAndListProjects","args":[{"name":"auth0Info","type":{"name":"Auth0Info","kind":"INPUT_OBJECT","ofType":null}}],"type":{"name":"UserAndProjects","kind":"OBJECT","ofType":null}},{"name":"errors","args":[],"type":{"name":null,"kind":"LIST","ofType":{"name":"Error","kind":"OBJECT"}}},{"name":"hello","args":[],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"String","kind":"SCALAR"}}},{"name":"isSuperAdmin","args":[],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Boolean","kind":"SCALAR"}}},{"name":"options","args":[],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Options","kind":"OBJECT"}}},{"name":"project","args":[{"name":"slug","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}},{"name":"auth0Info","type":{"name":"Auth0Info","kind":"INPUT_OBJECT","ofType":null}},{"name":"groupId","type":{"name":"ID","kind":"SCALAR","ofType":null}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Project","kind":"OBJECT"}}},{"name":"module","args":[{"name":"id","type":{"name":"ID","kind":"SCALAR","ofType":null}},{"name":"slug","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}}],"type":{"name":"Module","kind":"OBJECT","ofType":null}},{"name":"group","args":[{"name":"id","type":{"name":"ID","kind":"SCALAR","ofType":null}},{"name":"slug","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}}],"type":{"name":"Group","kind":"OBJECT","ofType":null}},{"name":"users","args":[{"name":"slug","type":{"name":"String","kind":"SCALAR","ofType":null}}],"type":{"name":null,"kind":"LIST","ofType":{"name":"User","kind":"OBJECT"}}},{"name":"user","args":[{"name":"auth0Info","type":{"name":"Auth0Info","kind":"INPUT_OBJECT","ofType":null}}],"type":{"name":"User","kind":"OBJECT","ofType":null}},{"name":"userGroups","args":[{"name":"auth0Id","type":{"name":"String","kind":"SCALAR","ofType":null}}],"type":{"name":"JSON","kind":"SCALAR","ofType":null}},{"name":"authorizeUser","args":[{"name":"url","type":{"name":"String","kind":"SCALAR","ofType":null}}],"type":{"name":"JSON","kind":"SCALAR","ofType":null}},{"name":"assignableUserList","args":[{"name":"url","type":{"name":"String","kind":"SCALAR","ofType":null}}],"type":{"name":null,"kind":"LIST","ofType":{"name":"User","kind":"OBJECT"}}},{"name":"viewer","args":[],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"User","kind":"OBJECT"}}},{"name":"invitation","args":[{"name":"invite_id","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}},{"name":"accepted","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"Boolean","ofType":null}}}],"type":{"name":"Invitations","kind":"OBJECT","ofType":null}},{"name":"moduleTypes","args":[],"type":{"name":null,"kind":"LIST","ofType":{"name":null,"kind":"NON_NULL"}}}]}
+const objectText = {
+  fontFamily: 'monospace, monospace'
+}
 
-let fields = parse(type)
+const textLine = {
+  height: '40px'
+}
+
+const type = {"name":"Mutation","inputFields":null,"fields":[{"name":"createProject","args":[{"name":"input","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"INPUT_OBJECT","name":"ProjectInput","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Project","kind":"OBJECT"}}},{"name":"updateProject","args":[{"name":"input","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"INPUT_OBJECT","name":"ProjectInput","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Project","kind":"OBJECT"}}},{"name":"toggleIsActive","args":[{"name":"slug","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}},{"name":"userId","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"ID","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Boolean","kind":"SCALAR"}}},{"name":"sendProjectCreationMail","args":[{"name":"input","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Project","kind":"OBJECT"}}},{"name":"createOrUpdateModule","args":[{"name":"input","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"INPUT_OBJECT","name":"ModuleInput","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Module","kind":"OBJECT"}}},{"name":"createOrUpdateGroup","args":[{"name":"input","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"INPUT_OBJECT","name":"GroupInput","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"GroupOutput","kind":"OBJECT"}}},{"name":"sendGroupUpdationMail","args":[{"name":"input","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"INPUT_OBJECT","name":"MailInput","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Project","kind":"OBJECT"}}},{"name":"cancelInvitation","args":[{"name":"id","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"Int","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Boolean","kind":"SCALAR"}}},{"name":"addPeopleToGroup","args":[{"name":"input","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"INPUT_OBJECT","name":"AddPeopleInput","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"AddPeopleOutput","kind":"OBJECT"}}},{"name":"sendAddPeopleMail","args":[{"name":"input","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"INPUT_OBJECT","name":"AddPeopleMailInput","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Project","kind":"OBJECT"}}},{"name":"deleteModule","args":[{"name":"id","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"ID","ofType":null}}},{"name":"slug","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Boolean","kind":"SCALAR"}}},{"name":"deleteProject","args":[{"name":"id","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"ID","ofType":null}}},{"name":"slug","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Boolean","kind":"SCALAR"}}},{"name":"reorderModules","args":[{"name":"reordering","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"LIST","name":null,"ofType":{"kind":"SCALAR","name":"String","ofType":null}}}},{"name":"slug","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}}],"type":{"name":null,"kind":"NON_NULL","ofType":{"name":"Boolean","kind":"SCALAR"}}},{"name":"getSessionToken","args":[{"name":"token","type":{"name":null,"kind":"NON_NULL","ofType":{"kind":"SCALAR","name":"String","ofType":null}}}],"type":{"name":"AWSToken","kind":"OBJECT","ofType":null}}]}
 
 let formatted = []
 let buffer = ''
@@ -82,24 +88,8 @@ function Main(props) {
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [schemaData, setSchemaData] = useState([])
-
-  JSON.stringify(type).split('').forEach(letter => {
-    if (letter == '{'){
-      buffer = buffer + letter
-      formatted.push(indentations(counter) + buffer)
-      buffer = ''
-      counter++
-    } else if (letter == '}'){
-      if(buffer == ''){
-        formatted.push(indentations(counter) + buffer)
-        buffer = ''
-      }
-      counter--
-      formatted.push(indentations(counter) + letter)
-    } else {
-      buffer = buffer + letter
-    }
-  })
+  const [expandedRows, setExpandedRows] = useState([])
+  const [fields, updateFields] = useState(parse(type, 1))
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
@@ -173,17 +163,40 @@ function Main(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <div>
-          <span style={whiteSpacePre}>{"Type Query {"}</span>
-        </div>
-        {
-          fields && fields.map((textRow, i) =>
-            <div key={i}>
-              <span key={i + 'span'} style={whiteSpacePre}>{textRow}</span>
-            </div>)
-        }
-        <div>
-          <span style={whiteSpacePre}>{"}"}</span>
+        <div style={objectText}>
+          <div style={textLine}>
+            <span style={whiteSpacePre}>{"Type Query {"}</span>
+          </div>
+          {
+            fields && fields.map((textRow, i) =>
+              <div key={i} style={textLine}>
+                {
+                  textRow.map((chunk, j) => {
+                    let item, args, clickFunction
+                    if (typeof chunk == 'string'){
+                      item = chunk
+                      args = [item, i, j, fields, dataObject]
+                      clickFunction = expand
+                    } else {
+                      item = chunk.text
+                      args = [chunk.collapse, fields, i]
+                      clickFunction = collapse
+                    }
+                      return <span
+                        key={j + 'span'}
+                        style={whiteSpacePre}
+                        onClick={() => updateFields(clickFunction(...args))}
+                        >
+                        {item}
+                      </span>
+                  })
+                }
+              </div>
+            )
+          }
+          <div style={textLine}>
+            <span style={whiteSpacePre}>{"}"}</span>
+          </div>
         </div>
       </main>
     </div>

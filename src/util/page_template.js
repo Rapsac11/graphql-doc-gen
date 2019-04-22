@@ -19,7 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import { navigate } from "gatsby"
 import dataObject from '../../util/dataObject'
-import { parse } from '../../../scripts/utils.js'
+import { parse, expand, collapse } from '../../../scripts'
 
 const drawerWidth = 240;
 
@@ -57,6 +57,14 @@ const useStyles = makeStyles(theme => ({
 
 const whiteSpacePre = {
   whiteSpace: 'pre-wrap'
+}
+
+const objectText = {
+  fontFamily: 'monospace, monospace'
+}
+
+const textLine = {
+  height: '40px'
 }
 
 const type = ${type}
@@ -144,17 +152,30 @@ function ${name}(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <div>
-          <span style={whiteSpacePre}>{"Type ${name} {"}</span>
-        </div>
-        {
-          fields && fields.map((textRow, i) =>
-            <div key={i}>
-              <span key={i + 'span'} style={whiteSpacePre}>{textRow}</span>
-            </div>)
-        }
-        <div>
-          <span style={whiteSpacePre}>{"}"}</span>
+        <div style={objectText}>
+          <div style={textLine}>
+            <span style={whiteSpacePre}>{"Type ${name} {"}</span>
+          </div>
+          {
+            fields && fields.map((textRow, i) =>
+              <div key={i} style={textLine}>
+                {
+                textRow.map((chunk, j)=>
+                  <span
+                    key={j + 'span'}
+                    style={whiteSpacePre}
+                    onClick={() => expand(chunk)}
+                    >
+                    {chunk}
+                  </span>
+                )
+              }
+              </div>
+            )
+          }
+          <div style={textLine}>
+            <span style={whiteSpacePre}>{"}"}</span>
+          </div>
         </div>
       </main>
     </div>
