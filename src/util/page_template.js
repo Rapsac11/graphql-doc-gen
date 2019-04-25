@@ -19,7 +19,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import { navigate } from "gatsby"
 import dataObject from '../../util/dataObject'
-import { parse, expand, collapse } from '../../../scripts'
+import { parse } from '../../../scripts'
+import ObjectText from '../../components/ObjectText'
 
 const drawerWidth = 240;
 
@@ -168,61 +169,7 @@ function ${name}(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <div style={objectText}>
-          <div style={textLine}>
-            <span style={whiteSpacePre}>{"Type ${name} {"}</span>
-          </div>
-          {
-            fields && fields.map((textRow, i) =>
-              {
-                return <div
-                  key={i}
-                  style={ hovered(i) ? hoveredTextLine : textLine}
-                  onClick={() => {
-                    if(typeof fields[i][0] !== 'string'){
-                      updateFields(collapse(fields[i][0].collapse, fields, i))
-                      setHovering(null)
-                    }
-                  }}
-                  onMouseEnter={() => setHovering(
-                    fields[i][0].collapse ? [
-                      i-fields[i][0].collapse.offset-1,
-                      i+fields[i][0].collapse.length-fields[i][0].collapse.offset,
-                    ] : i
-                  )}
-                  onMouseLeave={() => setHovering(null)}
-                  >
-                  {
-                    textRow.map((chunk, j) => {
-                      let item, args, clickFunction
-                      if (typeof chunk == 'string'){
-                        item = chunk
-                        args = [item, i, j, fields, dataObject]
-                        clickFunction = expand
-                      } else {
-                        item = chunk.text
-                        args = [chunk.collapse, fields, i]
-                        clickFunction = collapse
-                      }
-                        return <span
-                          key={j + 'span'}
-                          style={ hovered(i + '.' + j) ? hoveredWhiteSpacePre : whiteSpacePre}
-                          onClick={() => updateFields(clickFunction(...args))}
-                          onMouseEnter={() => setHovering(i + '.' + j)}
-                          onMouseLeave={() => setHovering(i)}
-                          >
-                          {item}
-                        </span>
-                    })
-                  }
-                </div>
-              }
-            )
-          }
-          <div style={textLine}>
-            <span style={whiteSpacePre}>{"}"}</span>
-          </div>
-        </div>
+        <ObjectText type={type}/>
       </main>
     </div>
   );
