@@ -1,3 +1,7 @@
 html, body, #___gatsby, div[role="group"][tabindex] {
   height: 100%;
 }
+
+textarea:focus, input:focus{
+  outline: none;
+}

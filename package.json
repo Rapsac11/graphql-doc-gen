@@ -19,7 +19,8 @@
     "prop-types": "latest",
     "react": "^16.8.6",
     "react-dom": "latest",
-    "react-jss": "^8.1.0"
+    "react-jss": "^8.1.0",
+    "react-simple-code-editor": "^0.9.10"
   },
   "devDependencies": {
     "@babel/register": "^7.4.0",
