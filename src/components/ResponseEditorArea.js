@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import Editor from 'react-simple-code-editor';
+import Editor from 'react-simple-code-editor'
+import Button from '@material-ui/core/Button'
 
 const objectText = {
   fontFamily: 'monospace, monospace',
@@ -13,40 +14,22 @@ const header = {
   height: '40px',
   paddingTop: '20px',
   paddingLeft: '10px',
-  marginRight: '24px'
-}
-
-const headerBorder = {
-  borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-  fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-  color: 'rgba(0, 0, 0, 0.5)',
-  height: '40px',
-  paddingTop: '20px',
-  paddingLeft: '10px',
-  marginRight: '24px'
+  marginRight: '24px',
+  display: 'flex',
+  justifyContent: 'space-between'
 }
 
 export default props => {
   const [code, setCode] = useState(props.defaultValue || ``)
 
-  const getHeight = () => {
-    if (props.height){
-      return `${props.height}px`
-    } else if (props.heightOffset){
-      return `calc(100% - ${props.heightOffset}px)`
-    } else {
-      return '100%'
-    }
-  }
-
   const main = {
-    height: getHeight()
+    height: '100%'
   }
 
   return (
     <div style={main}>
-      <div style={props.headerBorder ? headerBorder : header}>
-        {props.headerText}
+      <div style={header}>
+        <span>Response</span>
       </div>
       <div style={objectText}>
         <Editor

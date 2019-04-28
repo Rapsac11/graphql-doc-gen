@@ -1,25 +1,21 @@
 import React, { useState } from 'react'
-import EditorArea from './EditorArea'
+import GraphQLEditorArea from './GraphQLEditorArea'
+import VariableEditorArea from './VariableEditorArea'
 
 const main = {
   height: '100%'
 }
 
+const span = name => <span key={name}>{name}</span>
+
 export default props => {
 
   return (
     <div style={main}>
-      <EditorArea
-        heightOffset={150}
-        headerText="GraphQL"
-        defaultValue={`{
-  assignableUserList(url: "https://tests-a1.map-staging.arup.digital/"){
-    name
-  }
-}`}
-        />
-      <EditorArea
+      <GraphQLEditorArea/>
+      <VariableEditorArea
         height={150}
+        headerElements={[span("Variables")]}
         headerText="Variables"
         headerBorder
         />
