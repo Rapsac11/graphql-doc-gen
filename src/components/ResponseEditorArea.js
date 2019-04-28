@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Editor from 'react-simple-code-editor'
 import Button from '@material-ui/core/Button'
+import { QueryResponseContext } from '../reducers'
 
 const objectText = {
   fontFamily: 'monospace, monospace',
@@ -20,7 +21,7 @@ const header = {
 }
 
 export default props => {
-  const [code, setCode] = useState(props.defaultValue || ``)
+  const response = useContext(QueryResponseContext)
 
   const main = {
     height: '100%'
@@ -33,9 +34,9 @@ export default props => {
       </div>
       <div style={objectText}>
         <Editor
-          value={code}
-          onValueChange={code => setCode(code)}
-          highlight={code => code}
+          value={response}
+          onValueChange={response => response}
+          highlight={response => response}
           padding={10}
           style={{
             fontFamily: 'monospace, monospace',

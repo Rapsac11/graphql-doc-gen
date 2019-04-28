@@ -162,4 +162,4 @@ Main.propTypes = {
   container: PropTypes.object,
 };
 
-export default Main;
+export default Main

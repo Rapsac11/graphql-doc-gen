@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Editor from 'react-simple-code-editor'
 import Button from '@material-ui/core/Button'
+import { QueryDispatchContext } from '../reducers'
 
 const objectText = {
   fontFamily: 'monospace, monospace',
@@ -24,6 +25,15 @@ const mockedHeaders = {
   Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9UTXhNVEZGUVVORE56TXpRakZFTkVKRk9UbENNakUwUlVVNU1rTkVSRVJET1RFeE16TkNNQSJ9.eyJodHRwOi8vYXV0aHouYXJ1cC5kaWdpdGFsL2F1dGhvcml6YXRpb24iOnsiZ3JvdXBzIjpbIkJIV1AiLCJQT1JUQUwiXSwicm9sZXMiOltdLCJwZXJtaXNzaW9ucyI6W119LCJodHRwOi8vdXNlcm1ldGEuYXJ1cC5kaWdpdGFsL3VzZXJfbWV0YWRhdGEiOnsiZGF0YWJhc2VfYWNjZXNzIjoiYXJ1cCJ9LCJpc3MiOiJodHRwczovL2FydXBkaWdpdGFsLmF1LmF1dGgwLmNvbS8iLCJzdWIiOiJ3YWFkfGlYblQ5ZFhUeVVpTl9pem5zSlFBM3J0eW1UZGJ4Xy1ySnVIM2J4VEdreUEiLCJhdWQiOiJoNDdSaW1yUnUwWUdhRTBBWFhNSjJyc3FZN25zVXY1QSIsImlhdCI6MTU1NjQzOTYwOSwiZXhwIjoxNTU2NDc1NjA5LCJhdF9oYXNoIjoiWW1HcVdhQ3YyWjdTeGFtWGFBYzl3dyIsIm5vbmNlIjoidGlwOTlrM2V1ZmpjeU1Oakpkd0dOMTYwLU5wU1A3dTEifQ.RCB0DSZB2r5r9b5uqL1XAX3uyPi-tPAwy67PCMt0aU5fFVm-XM8btXWzx1lyBFm8bGH4e8ZtiZPJjOvkuhDvLvp4wJL8gp8DcZpX2jUao3lv0QMcOxblB0JoMo37G_g3Vk_ncvz-LYdtEs96GxRnH8BjuTm12S2hitsTULmLjUscPHfyZhRxlFURZ2isg9TmkbRJArQPRDRweiC-gtrw0T9zunnH6_aSqORNYfHIWqTbPVOhjCtbV8A0szwvERui1b1P9XvHeTc5nvddD5e6v0CfLVUXIUUZbbwBo-BbOxdtFCmHB3dBLacB_KEYtQpzEsYvLJg_iXAHFEQjU6PD2w"
 }
 
+
+export default props => {
+  const dispatch = useContext(QueryDispatchContext)
+  const [code, setCode] = useState(`{
+  assignableUserList(url: "https://tests-a1.map-staging.arup.digital/"){
+    name
+  }
+}`)
+
 const graphqlFetch = (query, headers, variables) =>{
   fetch('https://portal-staging.arup.digital/graphql', {
     method: "POST",
@@ -36,16 +46,9 @@ const graphqlFetch = (query, headers, variables) =>{
   })
     .then(d => d.json())
     .then(d => {
-      console.log('response', d)
+      dispatch(d)
     })
 }
-
-export default props => {
-  const [code, setCode] = useState(`{
-  assignableUserList(url: "https://tests-a1.map-staging.arup.digital/"){
-    name
-  }
-}`)
 
   const main = {
     height: `calc(100% - 150px)`

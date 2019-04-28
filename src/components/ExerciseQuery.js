@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useReducer } from 'react'
 import QueryEditorBlade from './QueryEditorBlade'
 import QueryResponseBlade from './QueryResponseBlade'
+import { QueryReducer, QueryDispatchContext, QueryResponseContext } from '../reducers'
 
 const main = {
   height: `calc(100% - 64px)`,
@@ -22,14 +23,20 @@ const right = {
 }
 
 export default props => {
+  const [response, dispatch] = useReducer(QueryReducer);
+
   return (
-    <div style={main}>
-      <div style={left}>
-        <QueryEditorBlade />
-      </div>
-      <div style={right}>
-        <QueryResponseBlade />
-      </div>
-    </div>
+    <QueryDispatchContext.Provider value={dispatch}>
+      <QueryResponseContext.Provider value={response}>
+        <div style={main}>
+          <div style={left}>
+            <QueryEditorBlade />
+          </div>
+          <div style={right}>
+            <QueryResponseBlade />
+          </div>
+        </div>
+      </QueryResponseContext.Provider>
+    </QueryDispatchContext.Provider>
   )
 }
