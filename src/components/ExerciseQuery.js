@@ -6,7 +6,7 @@ import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import Button from '@material-ui/core/Button';
 
 const main = {
-  height: `calc(100% - 64px)`,
+  height: '100%',
   display: 'flex'
 }
 
@@ -48,7 +48,7 @@ export default props => {
       <QueryResponseContext.Provider value={response}>
         <div style={main}>
           <div style={returnButtonContainer}>
-            <Button style={returnButton}>
+            <Button style={returnButton} onClick={() => props.setChecked(true)}>
               <ChevronLeft />
             </Button>
           </div>

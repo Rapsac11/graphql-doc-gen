@@ -51,6 +51,10 @@ export default props => {
             if(typeof fields[i][0] !== 'string'){
               updateFields(collapse(fields[i][0].collapse, fields, i))
               setHovering(null)
+            } else {
+              if(hovered(i)){
+                props.setChecked(false)
+              }
             }
           }}
           onMouseEnter={() => setHovering(
@@ -77,7 +81,6 @@ export default props => {
                   key={j + 'span'}
                   style={ hovered(i + '.' + j) ? hoveredWhiteSpacePre : whiteSpacePre}
                   onClick={() => {
-                      console.log(clickFunction(...args))
                       updateFields(clickFunction(...args))
                   }}
                   onMouseEnter={() => setHovering(i + '.' + j)}
