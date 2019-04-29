@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import Editor from 'react-simple-code-editor'
 import Button from '@material-ui/core/Button'
-import { QueryDispatchContext } from '../reducers'
+import { QueryDispatchContext, QueryTextResponseContext } from '../reducers'
 
 const objectText = {
   fontFamily: 'monospace, monospace',
@@ -28,20 +28,26 @@ const mockedHeaders = {
 
 export default props => {
   const dispatch = useContext(QueryDispatchContext)
+  const queryTextResponse = useContext(QueryTextResponseContext)
   const [code, setCode] = useState(`{
   assignableUserList(url: "https://tests-a1.map-staging.arup.digital/"){
     name
   }
 }`)
 
+useEffect(() => {
+  if (queryTextResponse){
+    setCode(queryTextResponse)
+  }
+}, [queryTextResponse])
+
 const graphqlFetch = (query, headers, variables) =>{
+  let url = "https://tests-a1.map-staging.arup.digital/"
   fetch('https://portal-staging.arup.digital/graphql', {
     method: "POST",
     headers: headers,
     body: JSON.stringify({
-      query: `
-      query ${query}
-    `
+      query: `query ${query}`
     })
   })
     .then(d => d.json())

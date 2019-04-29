@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { parse, expand, collapse } from '../../scripts'
 import dataObject from '../util/dataObject'
+import { QueryTextDispatchContext } from '../reducers'
 
 const whiteSpacePre = {
   whiteSpace: 'pre-wrap'
@@ -28,8 +29,20 @@ const hoveredTextLine = {
   backgroundColor: '#CCC'
 }
 
+const convertToQuery = lineArray => {
+  let string = '{&#13;&#10;'
+  lineArray.some(chunk =>{
+    if (chunk != '['){
+      string = string + chunk
+    }
+    return chunk == ')'
+  })
+  return string + '&#13;&#10;}'
+}
+
 export default props => {
   const { type } = props
+  const queryTextDispatch = useContext(QueryTextDispatchContext)
   const [fields, updateFields] = useState(parse(type, 1))
   const [hovering, setHovering] = useState('')
 
@@ -53,6 +66,7 @@ export default props => {
               setHovering(null)
             } else {
               if(hovered(i)){
+                queryTextDispatch(convertToQuery(textRow))
                 props.setChecked(false)
               }
             }

@@ -5,3 +5,9 @@ export const QueryResponseContext = React.createContext();
 export function QueryReducer(state, action) {
   return JSON.stringify(action, null, 2)
 }
+
+export const QueryTextDispatchContext = React.createContext();
+export const QueryTextResponseContext = React.createContext();
+export function QueryTextReducer(state, action) {
+  return action
+}
