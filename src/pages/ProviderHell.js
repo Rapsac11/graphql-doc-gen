@@ -1,12 +1,11 @@
 import React, { useReducer } from 'react';
-import Main from "./Main"
 import {
   QueryReducer, QueryDispatchContext, QueryResponseContext,
   QueryTextDispatchContext, QueryTextResponseContext, QueryTextReducer,
   QueryResponseDispatchContext, QueryResponseResponseContext, QueryResponseReducer
 } from '../reducers'
 
-export default () => {
+export default OrigComponent => props =>{
   const [response, dispatch] = useReducer(QueryReducer);
   const [queryTextResponse, queryTextDispatch] = useReducer(QueryTextReducer);
   const [queryResponseResponse, queryResponseDispatch] = useReducer(QueryTextReducer);
@@ -18,12 +17,12 @@ export default () => {
           <QueryTextResponseContext.Provider value={queryTextResponse}>
             <QueryResponseDispatchContext.Provider value={queryResponseDispatch}>
               <QueryResponseResponseContext.Provider value={queryResponseResponse}>
-                <Main />
+                <OrigComponent />
               </QueryResponseResponseContext.Provider>
             </QueryResponseDispatchContext.Provider>
           </QueryTextResponseContext.Provider>
         </QueryTextDispatchContext.Provider>
       </QueryResponseContext.Provider>
-    </QueryDispatchContext.Provider>              
+    </QueryDispatchContext.Provider>
   )
 }

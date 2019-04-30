@@ -79,7 +79,7 @@ export default props => {
   return (
     <div style={objectText}>
       <div style={textLine}>
-        <span style={whiteSpacePre}>{"Type Query {"}</span>
+        <span style={whiteSpacePre}>{"Type " + props.name + " {"}</span>
       </div>
       {
         fields && fields.map((textRow, i) =>
