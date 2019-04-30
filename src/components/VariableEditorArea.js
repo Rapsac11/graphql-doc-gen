@@ -35,7 +35,7 @@ export default props => {
   }, [variablesRef])
 
   const main = {
-    height: '150px'
+    height: '200px'
   }
 
   return (
