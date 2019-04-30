@@ -16,14 +16,15 @@ const parser = {
     field.args.map(arg => {
       let status = arg.type.kind == "NON_NULL" ? '!': ''
       let input = arg.type.ofType ? arg.type.ofType.name + status : arg.type.name
-      args.push(arg.name + ': ')
+      args.push(arg.name)
+      args.push(': ')
       args.push(input)
     })
     if (args.length){
       chunks.push('(')
       args.map((d, i) => {
         chunks.push(d)
-        if((i % 2 !== 0) && (i + 1) !== args.length){
+        if(((i+1) % 3 == 0) && (i + 1) !== args.length){
           chunks.push(', ')
         }
       })
