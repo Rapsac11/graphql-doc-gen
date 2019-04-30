@@ -2,17 +2,9 @@ require("@babel/register");
 import fetch from "node-fetch"
 import fs from 'fs'
 import { template } from '../src/util/page_template.js'
+import { baseTypes } from '../src/util/constants.js'
 
 const endpoint = process.argv[2]
-
-const baseTypes = [
-  'String',
-  'Boolean',
-  'ID',
-  'Int',
-  'JSON',
-  'Float'
-]
 
 function a(endpoint){
 
