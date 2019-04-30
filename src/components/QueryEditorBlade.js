@@ -12,7 +12,9 @@ export default props => {
 
   return (
     <div style={main}>
-      <GraphQLEditorArea/>
+      <GraphQLEditorArea
+        name={props.name}
+        />
       <VariableEditorArea
         height={150}
         headerElements={[span("Variables")]}

@@ -42,13 +42,14 @@ useEffect(() => {
   }
 }, [queryTextResponse])
 
-const graphqlFetch = (query, headers, variables) =>{
+const graphqlFetch = (upperCaseType, query, headers, variables) =>{
+  let lowerCaseType = upperCaseType.charAt(0).toLowerCase() + upperCaseType.slice(1)
   let url = "https://tests-a1.map-staging.arup.digital/"
   fetch('https://portal-staging.arup.digital/graphql', {
     method: "POST",
     headers: headers,
     body: JSON.stringify({
-      query: `query ${query}`
+      query: `${lowerCaseType} ${query}`
     })
   })
     .then(d => d.json())
@@ -70,7 +71,7 @@ const graphqlFetch = (query, headers, variables) =>{
           variant="contained"
           color="secondary"
           size='small'
-          onClick={() => graphqlFetch(code,mockedHeaders,queryResponseResponse.current.props.value)}
+          onClick={() => graphqlFetch(props.name,code,mockedHeaders,queryResponseResponse.current.props.value)}
           style={{
             padding: '0px'
           }}

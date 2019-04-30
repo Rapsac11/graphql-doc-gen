@@ -49,7 +49,7 @@ export default props => {
         </Button>
       </div>
       <div style={left}>
-        <QueryEditorBlade />
+        <QueryEditorBlade name={props.name}/>
       </div>
       <div style={right}>
         <QueryResponseBlade />

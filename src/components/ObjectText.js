@@ -45,7 +45,8 @@ const convertToQuery = lineArray => {
       return true
     }
     if(nextChunkIsVariable){
-      let variableChunk = '$' + chunk.replace("!","")
+      console.log('chunk', chunk, i)
+      let variableChunk = '$' + lineArray[i-2].replace("!","")
       let variableChunkType = baseTypes.includes(variableChunk) ? lineArray[i-2] : chunk
       string = string + variableChunk
       if (variables !== 'myQueryName('){
@@ -57,6 +58,7 @@ const convertToQuery = lineArray => {
       string = string + chunk
     }
     if(chunk === ': '){
+      console.log('chunk', chunk, i)
       nextChunkIsVariable = true
     }
     return chunk === ')'

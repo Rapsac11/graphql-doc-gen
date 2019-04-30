@@ -170,6 +170,7 @@ function Main(props) {
             <li className="carousel__slide">
               <ObjectText
                 type={type}
+                name="Query"
                 checked={checked}
                 setChecked={setChecked}
               />
@@ -177,6 +178,7 @@ function Main(props) {
             <li className="carousel__slide">
               <ExerciseQuery
                 checked={checked}
+                name="Query"
                 setChecked={setChecked}
               />
             </li>

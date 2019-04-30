@@ -181,6 +181,7 @@ function ${name}(props) {
             </li>
             <li className="carousel__slide">
               <ExerciseQuery
+                name="${name}"
                 checked={checked}
                 setChecked={setChecked}
               />
