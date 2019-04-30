@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import Editor from 'react-simple-code-editor'
 import Button from '@material-ui/core/Button'
+import { QueryResponseDispatchContext, VariablesRefContext } from '../reducers'
 
 const objectText = {
   fontFamily: 'monospace, monospace',
@@ -20,12 +21,21 @@ const header = {
 }
 
 export default props => {
-  const [code, setCode] = useState(``)
+  const [code, setCode] = useState(`{"https://tests-a1.map-staging.arup.digital/"}`)
+  const queryResponseDispatch = useContext(QueryResponseDispatchContext)
+
+  const variablesRef = useRef(null)
+
+  useEffect(() => {
+    if (variablesRef){
+      queryResponseDispatch(variablesRef)
+    }
+  }, [variablesRef])
 
   const main = {
     height: '150px'
   }
-
+  //setTimeout(()=> {queryResponseDispatch(code)},100)
   return (
     <div style={main}>
       <div style={header}>
@@ -34,9 +44,12 @@ export default props => {
       <div style={objectText}>
         <Editor
           value={code}
-          onValueChange={code => setCode(code)}
+          onValueChange={code => {
+            setCode(code)
+          }}
           highlight={code => code}
           padding={10}
+          ref={variablesRef}
           style={{
             fontFamily: 'monospace, monospace',
             fontSize: 16,

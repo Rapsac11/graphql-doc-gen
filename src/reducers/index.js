@@ -11,3 +11,9 @@ export const QueryTextResponseContext = React.createContext();
 export function QueryTextReducer(state, action) {
   return action
 }
+
+export const QueryResponseDispatchContext = React.createContext();
+export const QueryResponseResponseContext = React.createContext();
+export function QueryResponseReducer(state, action) {
+  return action
+}

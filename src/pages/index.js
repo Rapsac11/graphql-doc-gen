@@ -18,7 +18,10 @@ import dataObject from '../util/dataObject'
 import { parse } from '../../scripts'
 import ObjectText from '../components/ObjectText'
 import ExerciseQuery from '../components/ExerciseQuery'
-import { QueryTextDispatchContext, QueryTextResponseContext, QueryTextReducer } from '../reducers'
+import {
+  QueryTextDispatchContext, QueryTextResponseContext, QueryTextReducer,
+  QueryResponseDispatchContext, QueryResponseResponseContext, QueryResponseReducer
+} from '../reducers'
 import './styles.css'
 
 const drawerWidth = 240;
@@ -90,6 +93,7 @@ function Main(props) {
   const [mode, setMode] = useState('exercise')
   const [checked, setChecked] = useState(true)
   const [queryTextResponse, queryTextDispatch] = useReducer(QueryTextReducer);
+  const [queryResponseResponse, queryResponseDispatch] = useReducer(QueryTextReducer);
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
@@ -116,77 +120,81 @@ function Main(props) {
   return (
     <QueryTextDispatchContext.Provider value={queryTextDispatch}>
       <QueryTextResponseContext.Provider value={queryTextResponse}>
-        <div className={classes.root}>
-          <CssBaseline />
-          <AppBar position="fixed" className={classes.appBar}>
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={handleDrawerToggle}
-                className={classes.menuButton}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit" noWrap onClick={() => setChecked(!checked)}>
-                Graphql Documentation
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <nav className={classes.drawer}>
-            <Hidden smUp implementation="css">
-              <Drawer
-                container={container}
-                variant="temporary"
-                anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                open={mobileOpen}
-                onClose={handleDrawerToggle}
-                classes={{
-                  paper: classes.drawerPaper,
-                }}
-                ModalProps={{
-                  keepMounted: true,
-                }}
-              >
-                {drawer}
-              </Drawer>
-            </Hidden>
-            <Hidden xsDown implementation="css">
-              <Drawer
-                classes={{
-                  paper: classes.drawerPaper,
-                }}
-                variant="permanent"
-                open
-              >
-                {drawer}
-              </Drawer>
-            </Hidden>
-          </nav>
-          <main className={classes.content}>
-            <div className={classes.toolbar} />
-            <div className='here' />
-            <div className="carousel carousel--translate">
-              <input className="carousel__activator" type="radio" checked={checked} readOnly/>
-              <input className="carousel__activator" type="radio" checked={!checked} readOnly/>
-              <div className="carousel__track">
-                <li className="carousel__slide">
-                  <ObjectText
-                    type={type}
-                    checked={checked}
-                    setChecked={setChecked}
-                  />
-                </li>
-                <li className="carousel__slide">
-                  <ExerciseQuery
-                    checked={checked}
-                    setChecked={setChecked}
-                  />
-                </li>
-              </div>
+        <QueryResponseDispatchContext.Provider value={queryResponseDispatch}>
+          <QueryResponseResponseContext.Provider value={queryResponseResponse}>
+            <div className={classes.root}>
+              <CssBaseline />
+              <AppBar position="fixed" className={classes.appBar}>
+                <Toolbar>
+                  <IconButton
+                    color="inherit"
+                    aria-label="Open drawer"
+                    onClick={handleDrawerToggle}
+                    className={classes.menuButton}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                  <Typography variant="h6" color="inherit" noWrap onClick={() => setChecked(!checked)}>
+                    Graphql Documentation
+                  </Typography>
+                </Toolbar>
+              </AppBar>
+              <nav className={classes.drawer}>
+                <Hidden smUp implementation="css">
+                  <Drawer
+                    container={container}
+                    variant="temporary"
+                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                    open={mobileOpen}
+                    onClose={handleDrawerToggle}
+                    classes={{
+                      paper: classes.drawerPaper,
+                    }}
+                    ModalProps={{
+                      keepMounted: true,
+                    }}
+                  >
+                    {drawer}
+                  </Drawer>
+                </Hidden>
+                <Hidden xsDown implementation="css">
+                  <Drawer
+                    classes={{
+                      paper: classes.drawerPaper,
+                    }}
+                    variant="permanent"
+                    open
+                  >
+                    {drawer}
+                  </Drawer>
+                </Hidden>
+              </nav>
+              <main className={classes.content}>
+                <div className={classes.toolbar} />
+                <div className='here' />
+                <div className="carousel carousel--translate">
+                  <input className="carousel__activator" type="radio" checked={checked} readOnly/>
+                  <input className="carousel__activator" type="radio" checked={!checked} readOnly/>
+                  <div className="carousel__track">
+                    <li className="carousel__slide">
+                      <ObjectText
+                        type={type}
+                        checked={checked}
+                        setChecked={setChecked}
+                      />
+                    </li>
+                    <li className="carousel__slide">
+                      <ExerciseQuery
+                        checked={checked}
+                        setChecked={setChecked}
+                      />
+                    </li>
+                  </div>
+                </div>
+              </main>
             </div>
-          </main>
-        </div>
+          </QueryResponseResponseContext.Provider>
+        </QueryResponseDispatchContext.Provider>
       </QueryTextResponseContext.Provider>
     </QueryTextDispatchContext.Provider>
   );

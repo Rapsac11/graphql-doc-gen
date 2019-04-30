@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import Editor from 'react-simple-code-editor'
 import Button from '@material-ui/core/Button'
-import { QueryDispatchContext, QueryTextResponseContext } from '../reducers'
+import { QueryDispatchContext, QueryTextResponseContext, QueryResponseResponseContext } from '../reducers'
 
 const objectText = {
   fontFamily: 'monospace, monospace',
@@ -29,8 +29,9 @@ const mockedHeaders = {
 export default props => {
   const dispatch = useContext(QueryDispatchContext)
   const queryTextResponse = useContext(QueryTextResponseContext)
-  const [code, setCode] = useState(`{
-  assignableUserList(url: "https://tests-a1.map-staging.arup.digital/"){
+  const queryResponseResponse = useContext(QueryResponseResponseContext)
+  const [code, setCode] = useState(`myQueryName($url: String!){
+  assignableUserList(url: $url){
     name
   }
 }`)
@@ -69,7 +70,7 @@ const graphqlFetch = (query, headers, variables) =>{
           variant="contained"
           color="secondary"
           size='small'
-          onClick={() => graphqlFetch(code,mockedHeaders,'')}
+          onClick={() => graphqlFetch(code,mockedHeaders,queryResponseResponse.current.props.value)}
           style={{
             padding: '0px'
           }}
