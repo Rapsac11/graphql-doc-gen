@@ -21,7 +21,9 @@ const header = {
 }
 
 export default props => {
-  const [code, setCode] = useState(`{"https://tests-a1.map-staging.arup.digital/"}`)
+  const [code, setCode] = useState(`{
+  "url":"https://tests-a1.map-staging.arup.digital/"
+}`)
   const queryResponseDispatch = useContext(QueryResponseDispatchContext)
 
   const variablesRef = useRef(null)
@@ -35,7 +37,7 @@ export default props => {
   const main = {
     height: '150px'
   }
-  //setTimeout(()=> {queryResponseDispatch(code)},100)
+
   return (
     <div style={main}>
       <div style={header}>
@@ -52,7 +54,7 @@ export default props => {
           ref={variablesRef}
           style={{
             fontFamily: 'monospace, monospace',
-            fontSize: 16,
+            fontSize: 14,
           }}
         />
       </div>

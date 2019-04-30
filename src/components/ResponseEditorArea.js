@@ -40,7 +40,7 @@ export default props => {
           padding={10}
           style={{
             fontFamily: 'monospace, monospace',
-            fontSize: 16,
+            fontSize: 14,
           }}
         />
       </div>
