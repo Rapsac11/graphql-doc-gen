@@ -1,7 +1,6 @@
 import React, { useState, useReducer } from 'react'
 import QueryEditorBlade from './QueryEditorBlade'
 import QueryResponseBlade from './QueryResponseBlade'
-import { QueryReducer, QueryDispatchContext, QueryResponseContext } from '../reducers'
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import Button from '@material-ui/core/Button';
 
@@ -41,25 +40,20 @@ const right = {
 }
 
 export default props => {
-  const [response, dispatch] = useReducer(QueryReducer);
 
   return (
-    <QueryDispatchContext.Provider value={dispatch}>
-      <QueryResponseContext.Provider value={response}>
-        <div style={main}>
-          <div style={returnButtonContainer}>
-            <Button style={returnButton} onClick={() => props.setChecked(true)}>
-              <ChevronLeft />
-            </Button>
-          </div>
-          <div style={left}>
-            <QueryEditorBlade />
-          </div>
-          <div style={right}>
-            <QueryResponseBlade />
-          </div>
-        </div>
-      </QueryResponseContext.Provider>
-    </QueryDispatchContext.Provider>
+    <div style={main}>
+      <div style={returnButtonContainer}>
+        <Button style={returnButton} onClick={() => props.setChecked(true)}>
+          <ChevronLeft />
+        </Button>
+      </div>
+      <div style={left}>
+        <QueryEditorBlade />
+      </div>
+      <div style={right}>
+        <QueryResponseBlade />
+      </div>
+    </div>
   )
 }
