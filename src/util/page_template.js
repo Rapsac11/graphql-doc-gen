@@ -1,5 +1,5 @@
 export const template = (type, name) => `
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -21,12 +21,16 @@ import { navigate } from "gatsby"
 import dataObject from '../../util/dataObject'
 import { parse } from '../../../scripts'
 import ObjectText from '../../components/ObjectText'
+import ExerciseQuery from '../../components/ExerciseQuery'
+import { QueryTextDispatchContext, QueryTextResponseContext, QueryTextReducer } from '../../reducers'
+import '../styles.css'
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
+    height: '100%'
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -53,20 +57,12 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
+    height: '100%'
   },
 }));
 
 const whiteSpacePre = {
   whiteSpace: 'pre-wrap'
-}
-
-const hoveredWhiteSpacePre = {
-  whiteSpace: 'pre-wrap',
-  backgroundColor: '#CCC'
-}
-
-const objectText = {
-  fontFamily: 'monospace, monospace'
 }
 
 const textLine = {
@@ -75,11 +71,16 @@ const textLine = {
   height: '40px'
 }
 
-const hoveredTextLine = {
-  display: 'flex',
-  alignItems: 'center',
-  height: '40px',
-  backgroundColor: '#CCC'
+const rootStyles = {
+  height: '100%'
+}
+
+const track = {
+  height: 'calc(100% - 64px)'
+}
+
+const slide = {
+  height: '100%'
 }
 
 const type = ${type}
@@ -89,16 +90,13 @@ function ${name}(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [schemaData, setSchemaData] = useState([])
-  const [fields, updateFields] = useState(parse(type, 1))
-    const [hovering, setHovering] = useState('')
+  const [fields, ] = useState(parse(type, 1))
+  const [mode, setMode] = useState('exercise')
+  const [checked, setChecked] = useState(true)
+  const [queryTextResponse, queryTextDispatch] = useReducer(QueryTextReducer);
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
-  }
-
-  const hovered = row => {
-    return (typeof hovering == 'object' && hovering) ? (row > hovering[0]+0.99 && row < hovering[1]) : row == hovering
   }
 
   const drawer = (
@@ -120,60 +118,83 @@ function ${name}(props) {
   );
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="Open drawer"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" color="inherit" noWrap>
-            ${name}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <nav className={classes.drawer}>
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true,
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        <ObjectText type={type}/>
-      </main>
-    </div>
+    <QueryTextDispatchContext.Provider value={queryTextDispatch}>
+      <QueryTextResponseContext.Provider value={queryTextResponse}>
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar position="fixed" className={classes.appBar}>
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="Open drawer"
+                onClick={handleDrawerToggle}
+                className={classes.menuButton}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" color="inherit" noWrap onClick={() => setChecked(!checked)}>
+                ${name}
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <nav className={classes.drawer}>
+            <Hidden smUp implementation="css">
+              <Drawer
+                container={container}
+                variant="temporary"
+                anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                classes={{
+                  paper: classes.drawerPaper,
+                }}
+                ModalProps={{
+                  keepMounted: true,
+                }}
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+            <Hidden xsDown implementation="css">
+              <Drawer
+                classes={{
+                  paper: classes.drawerPaper,
+                }}
+                variant="permanent"
+                open
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+          </nav>
+          <main className={classes.content}>
+            <div className={classes.toolbar} />
+            <div className='here' />
+            <div className="carousel carousel--translate">
+              <input className="carousel__activator" type="radio" checked={checked} readOnly/>
+              <input className="carousel__activator" type="radio" checked={!checked} readOnly/>
+              <div className="carousel__track">
+                <li className="carousel__slide">
+                  <ObjectText
+                    type={type}
+                    checked={checked}
+                    setChecked={setChecked}
+                  />
+                </li>
+                <li className="carousel__slide">
+                  <ExerciseQuery
+                    checked={checked}
+                    setChecked={setChecked}
+                  />
+                </li>
+              </div>
+            </div>
+          </main>
+        </div>
+      </QueryTextResponseContext.Provider>
+    </QueryTextDispatchContext.Provider>
   );
-}
+  }
 
 ${name}.propTypes = {
   container: PropTypes.object,

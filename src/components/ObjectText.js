@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import { parse, expand, collapse } from '../../scripts'
 import dataObject from '../util/dataObject'
 import { QueryTextDispatchContext } from '../reducers'
+import { baseTypes } from '../util/constants.js'
 
 const whiteSpacePre = {
   whiteSpace: 'pre-wrap'
@@ -30,14 +31,39 @@ const hoveredTextLine = {
 }
 
 const convertToQuery = lineArray => {
-  let string = '{&#13;&#10;'
-  lineArray.some(chunk =>{
-    if (chunk != '['){
+  let hasVariables = 'maybe'
+  let variables = 'myQueryName('
+  let string = '{' + `
+`
+  let nextChunkIsVariable = false
+  lineArray.some((chunk, i) =>{
+    if(chunk === '('){
+      hasVariables = true
+    }
+    if(chunk === ': ' && hasVariables === 'maybe'){
+      hasVariables = false
+      return true
+    }
+    if(nextChunkIsVariable){
+      let variableChunk = '$' + chunk.replace("!","")
+      let variableChunkType = baseTypes.includes(variableChunk) ? lineArray[i-2] : chunk
+      string = string + variableChunk
+      if (variables !== 'myQueryName('){
+        variableChunk = ', ' + variableChunk
+      }
+      variables = variables + variableChunk + ': ' + variableChunkType
+      nextChunkIsVariable = false
+    } else {
       string = string + chunk
     }
-    return chunk == ')'
+    if(chunk === ': '){
+      nextChunkIsVariable = true
+    }
+    return chunk === ')'
   })
-  return string + '&#13;&#10;}'
+  let query = string + `
+` + '}'
+  return hasVariables ? variables + ')' + query : query
 }
 
 export default props => {
@@ -66,8 +92,10 @@ export default props => {
               setHovering(null)
             } else {
               if(hovered(i)){
-                queryTextDispatch(convertToQuery(textRow))
-                props.setChecked(false)
+                if(textRow[1] !== '}'){
+                  queryTextDispatch(convertToQuery(textRow))
+                  props.setChecked(false)
+                }
               }
             }
           }}
