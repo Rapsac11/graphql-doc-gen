@@ -30,6 +30,13 @@ const hoveredTextLine = {
   backgroundColor: '#CCC'
 }
 
+const hoveredTextLineBlue = {
+  display: 'flex',
+  alignItems: 'center',
+  height: '40px',
+  backgroundColor: '#3f51b5'
+}
+
 const convertToQuery = lineArray => {
   let hasVariables = 'maybe'
   let variables = 'myQueryName('
@@ -45,7 +52,6 @@ const convertToQuery = lineArray => {
       return true
     }
     if(nextChunkIsVariable){
-      console.log('chunk', chunk, i)
       let variableChunk = '$' + lineArray[i-2].replace("!","")
       let variableChunkType = baseTypes.includes(variableChunk) ? lineArray[i-2] : chunk
       string = string + variableChunk
@@ -58,7 +64,6 @@ const convertToQuery = lineArray => {
       string = string + chunk
     }
     if(chunk === ': '){
-      console.log('chunk', chunk, i)
       nextChunkIsVariable = true
     }
     return chunk === ')'
@@ -75,7 +80,7 @@ export default props => {
   const [hovering, setHovering] = useState('')
 
   const hovered = row => {
-    return (typeof hovering == 'object' && hovering) ? (row > hovering[0]+0.99 && row < hovering[1]) : row == hovering
+    return (typeof hovering == 'object' && hovering) && (row > hovering[0]+0.99 && row < hovering[1]) ? 'gray' : row == hovering ? 'blue' : false
   }
 
   return (
@@ -87,7 +92,7 @@ export default props => {
         fields && fields.map((textRow, i) =>
           <div
           key={i}
-          style={ hovered(i) ? hoveredTextLine : textLine}
+          style={ hovered(i) == 'gray' ? hoveredTextLine : hovered(i) == 'blue' ? hoveredTextLineBlue : textLine }
           onClick={() => {
             if(typeof fields[i][0] !== 'string'){
               updateFields(collapse(fields[i][0].collapse, fields, i))
@@ -101,13 +106,15 @@ export default props => {
               }
             }
           }}
-          onMouseEnter={() => setHovering(
+          onMouseEnter={() => {
+            setHovering(
             fields[i][0].collapse ? [
               i-fields[i][0].collapse.offset-1,
               i+fields[i][0].collapse.length-fields[i][0].collapse.offset,
             ] : i
-          )}
-          onMouseLeave={() => setHovering(null)}
+          )}}
+          onMouseLeave={() => {
+            setHovering(null)}}
           >
           {
             textRow.map((chunk, j) => {
@@ -123,12 +130,16 @@ export default props => {
               }
                 return <span
                   key={j + 'span'}
-                  style={ hovered(i + '.' + j) ? hoveredWhiteSpacePre : whiteSpacePre}
+                  style={ hovered(i + '.' + (j+1)) ? hoveredWhiteSpacePre : whiteSpacePre}
                   onClick={() => {
                       updateFields(clickFunction(...args))
                   }}
-                  onMouseEnter={() => setHovering(i + '.' + j)}
-                  onMouseLeave={() => setHovering(i)}
+                  onMouseEnter={() =>setHovering(i + '.' + (j+1))}
+                  onMouseLeave={() => {
+                    if (typeof chunk !== 'object'){
+                      setHovering(i)
+                    }
+                  }}
                   >
                   {item}
                 </span>
