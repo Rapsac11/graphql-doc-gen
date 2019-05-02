@@ -37,6 +37,12 @@ const hoveredTextLineBlue = {
   backgroundColor: '#3f51b5'
 }
 
+const tryItText = {
+  whiteSpace: 'pre-wrap',
+  color: '#fff',
+  marginLeft: 'auto',
+}
+
 const convertToQuery = lineArray => {
   let hasVariables = 'maybe'
   let variables = 'myQueryName('
@@ -107,12 +113,15 @@ export default props => {
             }
           }}
           onMouseEnter={() => {
-            setHovering(
-            fields[i][0].collapse ? [
-              i-fields[i][0].collapse.offset-1,
-              i+fields[i][0].collapse.length-fields[i][0].collapse.offset,
-            ] : i
-          )}}
+            if(textRow[1] !== '}'){
+              setHovering(
+                fields[i][0].collapse ? [
+                  i-fields[i][0].collapse.offset-1,
+                  i+fields[i][0].collapse.length-fields[i][0].collapse.offset,
+                ] : i
+              )
+            }
+            }}
           onMouseLeave={() => {
             setHovering(null)}}
           >
@@ -144,6 +153,9 @@ export default props => {
                   {item}
                 </span>
               })
+            }
+            {
+               hovered(i) == 'blue' && <div style={tryItText}>try it now >  </div>
             }
           </div>
         )
