@@ -2,25 +2,36 @@ import React, { useState, useContext, useEffect } from 'react'
 import Editor from 'react-simple-code-editor'
 import Button from '@material-ui/core/Button'
 import Modal from '@material-ui/core/Modal'
+import SettingsIcon from '@material-ui/icons/Settings';
+import { makeStyles, useTheme } from '@material-ui/styles'
 import ExportModalContent from './ExportModalContent.js'
 import { QueryDispatchContext, QueryTextResponseContext, QueryResponseResponseContext } from '../reducers'
 
-const objectText = {
-  fontFamily: 'monospace, monospace',
-  overflowY: 'scroll',
-  height: `calc(100% - 50px)`
-}
-
-const header = {
-  fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-  color: 'rgba(0, 0, 0, 0.5)',
-  height: '40px',
-  paddingTop: '20px',
-  paddingLeft: '10px',
-  marginRight: '24px',
-  display: 'flex',
-  justifyContent: 'space-between'
-}
+const useStyles = makeStyles(theme => ({
+  icon: {
+    fontSize: 20,
+    marginLeft: '5px'
+  },
+  header: {
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    color: 'rgba(0, 0, 0, 0.5)',
+    height: '40px',
+    paddingTop: '20px',
+    paddingLeft: '10px',
+    marginRight: '24px',
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  objectText: {
+    fontFamily: 'monospace, monospace',
+    overflowY: 'scroll',
+    height: `calc(100% - 50px)`
+  },
+  nameAndIcon: {
+    display: 'flex',
+    alignItems: 'center'
+  }
+}))
 
 const mockedHeaders = {
   "Content-Type": "application/json",
@@ -28,6 +39,7 @@ const mockedHeaders = {
 }
 
 export default props => {
+  const classes = useStyles()
   const dispatch = useContext(QueryDispatchContext)
   const queryTextResponse = useContext(QueryTextResponseContext)
   const queryResponseResponse = useContext(QueryResponseResponseContext)
@@ -67,21 +79,12 @@ const graphqlFetch = (upperCaseType, query, headers, variables) => {
 
   return (
     <div style={main}>
-      <div style={header}>
-        <span>GraphQL</span>
-          <Button
-            key='headers'
-            variant="contained"
-            color="primary"
-            size='small'
-            onClick={() => setModalOpen(true)}
-            style={{
-              padding: '0px',
-              minWidth: '80px'
-            }}
-          >
-          Export
-        </Button>
+      <div className={classes.header}>
+        <div className={classes.nameAndIcon}>
+          <span>GraphQL</span>
+          <SettingsIcon className={classes.icon}/>
+        </div>
+
         <Modal
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
@@ -105,7 +108,7 @@ const graphqlFetch = (upperCaseType, query, headers, variables) => {
         Run
       </Button>
       </div>
-      <div style={objectText}>
+      <div className={classes.objectText}>
         <Editor
           value={code}
           onValueChange={code => setCode(code)}
