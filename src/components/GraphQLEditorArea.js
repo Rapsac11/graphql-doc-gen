@@ -2,9 +2,11 @@ import React, { useState, useContext, useEffect } from 'react'
 import Editor from 'react-simple-code-editor'
 import Button from '@material-ui/core/Button'
 import Modal from '@material-ui/core/Modal'
-import SettingsIcon from '@material-ui/icons/Settings';
+import SettingsIcon from '@material-ui/icons/Settings'
+import Popover from '@material-ui/core/Popover'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import ExportModalContent from './ExportModalContent.js'
+import GraphQLSettings from './GraphQLSettings.js'
 import { QueryDispatchContext, QueryTextResponseContext, QueryResponseResponseContext } from '../reducers'
 
 const useStyles = makeStyles(theme => ({
@@ -44,34 +46,35 @@ export default props => {
   const queryTextResponse = useContext(QueryTextResponseContext)
   const queryResponseResponse = useContext(QueryResponseResponseContext)
   const [modalOpen, setModalOpen] = useState(false)
+  const [popAnchor, setPopAnchor] = useState(null)
   const [code, setCode] = useState(`myQueryName($url: String!){
   assignableUserList(url: $url){
     name
   }
 }`)
 
-useEffect(() => {
-  if (queryTextResponse){
-    setCode(queryTextResponse)
-  }
-}, [queryTextResponse])
+  useEffect(() => {
+    if (queryTextResponse){
+      setCode(queryTextResponse)
+    }
+  }, [queryTextResponse])
 
-const graphqlFetch = (upperCaseType, query, headers, variables) => {
-  let lowerCaseType = upperCaseType.charAt(0).toLowerCase() + upperCaseType.slice(1)
-  let url = "https://tests-a1.map-staging.arup.digital/"
-  fetch('https://portal-staging.arup.digital/graphql', {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify({
-      query: `${lowerCaseType} ${query}`,
-      variables: JSON.parse(variables)
+  const graphqlFetch = (upperCaseType, query, headers, variables) => {
+    let lowerCaseType = upperCaseType.charAt(0).toLowerCase() + upperCaseType.slice(1)
+    let url = "https://tests-a1.map-staging.arup.digital/"
+    fetch('https://portal-staging.arup.digital/graphql', {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        query: `${lowerCaseType} ${query}`,
+        variables: JSON.parse(variables)
+      })
     })
-  })
-    .then(d => d.json())
-    .then(d => {
-      dispatch(d)
-    })
-}
+      .then(d => d.json())
+      .then(d => {
+        dispatch(d)
+      })
+  }
 
   const main = {
     height: `calc(100% - 200px)`
@@ -82,9 +85,8 @@ const graphqlFetch = (upperCaseType, query, headers, variables) => {
       <div className={classes.header}>
         <div className={classes.nameAndIcon}>
           <span>GraphQL</span>
-          <SettingsIcon className={classes.icon}/>
+          <GraphQLSettings />
         </div>
-
         <Modal
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
