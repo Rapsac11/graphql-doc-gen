@@ -114,6 +114,7 @@ function a(endpoint){
       dataObjectStream.end()
     })
   })
+  console.log('successfully generated documentation')
 }
 
 a(endpoint)
