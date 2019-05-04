@@ -83,7 +83,7 @@ export default props => {
   const { type } = props
   const queryTextDispatch = useContext(QueryTextDispatchContext)
   const [fields, updateFields] = useState(parse(type, 1))
-  const [hovering, setHovering] = useState('')
+  const [hovering, setHovering] = useState(-1)
 
   const hovered = row => {
     return (typeof hovering == 'object' && hovering) && (row > hovering[0]+0.99 && row < hovering[1]) ? 'gray' : row == hovering ? 'blue' : false
