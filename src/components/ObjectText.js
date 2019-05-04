@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { parse, expand, collapse } from '../../scripts'
 import dataObject from '../util/dataObject'
 import { QueryTextDispatchContext } from '../reducers'
-import { baseTypes } from '../util/constants.js'
+import { baseTypes } from '../util/constants/baseTypes.js'
 
 const whiteSpacePre = {
   whiteSpace: 'pre-wrap'
