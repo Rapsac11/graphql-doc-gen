@@ -13,5 +13,8 @@ yarn.lock
 # Gatsby.js
 /public
 /.cache
+
+# generated items
 /src/pages/generated/*
 /src/util/dataObject.js
+/src/util/constants/queryMutationTypes.js
