@@ -5,7 +5,6 @@ import Modal from '@material-ui/core/Modal'
 import SettingsIcon from '@material-ui/icons/Settings'
 import Popover from '@material-ui/core/Popover'
 import { makeStyles, useTheme } from '@material-ui/styles'
-import ExportModalContent from './ExportModalContent.js'
 import GraphQLSettings from './GraphQLSettings.js'
 import { QueryDispatchContext, QueryTextResponseContext, QueryResponseResponseContext } from '../reducers'
 
@@ -35,6 +34,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+
 const mockedHeaders = {
   "Content-Type": "application/json",
   Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9UTXhNVEZGUVVORE56TXpRakZFTkVKRk9UbENNakUwUlVVNU1rTkVSRVJET1RFeE16TkNNQSJ9.eyJodHRwOi8vYXV0aHouYXJ1cC5kaWdpdGFsL2F1dGhvcml6YXRpb24iOnsiZ3JvdXBzIjpbIkJIV1AiLCJQT1JUQUwiXSwicm9sZXMiOltdLCJwZXJtaXNzaW9ucyI6W119LCJodHRwOi8vdXNlcm1ldGEuYXJ1cC5kaWdpdGFsL3VzZXJfbWV0YWRhdGEiOnsiZGF0YWJhc2VfYWNjZXNzIjoiYXJ1cCJ9LCJpc3MiOiJodHRwczovL2FydXBkaWdpdGFsLmF1LmF1dGgwLmNvbS8iLCJzdWIiOiJ3YWFkfGlYblQ5ZFhUeVVpTl9pem5zSlFBM3J0eW1UZGJ4Xy1ySnVIM2J4VEdreUEiLCJhdWQiOiJoNDdSaW1yUnUwWUdhRTBBWFhNSjJyc3FZN25zVXY1QSIsImlhdCI6MTU1NjYyOTE1MiwiZXhwIjoxNTU2NjY1MTUyLCJhdF9oYXNoIjoib0MxUkN3TWVscmMybkVFdUhmQ3ZSUSIsIm5vbmNlIjoiZ3lnLkl3bUtLN0swSEpVTzlyZlE2Nmt6ems1ZEhafloifQ.EjYa5QNAqcoOND34KSya8Ae2NQTwb8x1dzDZ36VNlHZs94cnJXDX8gIamnqo82JiFm9x3Z0tiIVtJx6-7Sn9d3K82EYVM9uQz0ocVkmM2lCzx-fTLJskcz0wxcLb1VOrl1k5-X4Cdq7slscb9lMmZVvQKJZmJuzTUpe-bR4sWgu95T0NEGrB-J11avPx5C2_eVQ5f-2yWJaRePvEtI2zOkr0oS9YoLUcxvFOIqAyYQdPKQxKMKmE37hiDd-h0omVBdWHcZWBXISWokxAAb566GfGOuT-W9jpPXvNgx3ljDkh58p1kN-4rGWxAv3EB_zHU6ghQH-AZQHaC7xWo5c_oQ"
@@ -45,7 +45,6 @@ export default props => {
   const dispatch = useContext(QueryDispatchContext)
   const queryTextResponse = useContext(QueryTextResponseContext)
   const queryResponseResponse = useContext(QueryResponseResponseContext)
-  const [modalOpen, setModalOpen] = useState(false)
   const [popAnchor, setPopAnchor] = useState(null)
   const [code, setCode] = useState(`myQueryName($url: String!){
   assignableUserList(url: $url){
@@ -85,18 +84,29 @@ export default props => {
       <div className={classes.header}>
         <div className={classes.nameAndIcon}>
           <span>GraphQL</span>
-          <GraphQLSettings />
+          <SettingsIcon
+            className={classes.icon}
+            onClick={e => setPopAnchor(e.currentTarget)}
+            />
+            <Popover
+            id="simple-popper"
+            open={!!popAnchor}
+            anchorEl={popAnchor}
+            onClose={() => setPopAnchor(null)}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+          ><GraphQLSettings
+            mockedHeaders={mockedHeaders}
+            code={code}
+            />
+          </Popover>
         </div>
-        <Modal
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-        >
-          <ExportModalContent
-            data={[props.name,code,mockedHeaders]}
-          />
-        </Modal>
         <Button
           key='run'
           variant="contained"

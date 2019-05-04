@@ -4,8 +4,8 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
 import SettingsIcon from '@material-ui/icons/Settings'
-import Popover from '@material-ui/core/Popover'
-import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button'
+import Modal from '@material-ui/core/Modal'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import ExportModalContent from './ExportModalContent.js'
 import { QueryDispatchContext, QueryTextResponseContext, QueryResponseResponseContext } from '../reducers'
@@ -26,47 +26,51 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const getModalStyle = () => {
+  const top = 50
+  const left = 50
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
 export default props => {
   const classes = useStyles()
+  const [modalOpen, setModalOpen] = useState(false)
   const [popAnchor, setPopAnchor] = useState(null)
-
+  const { name, code, mockedHeaders }  = props
   return (
     <div>
-      <SettingsIcon
-        className={classes.icon}
-        onClick={e => setPopAnchor(e.currentTarget)}
-      />
-      <Popover
-        id="simple-popper"
-        open={!!popAnchor}
-        anchorEl={popAnchor}
-
-        onClose={() => setPopAnchor(null)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
+      <div className={classes.root}>
+        <List component="nav" className={classes.itemText}>
+          <ListItem>
+            <Button color="primary">
+              Set Headers
+            </Button>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Button
+              onClick={() => setModalOpen(true)}
+              color="primary">
+              Export Query
+            </Button>
+          </ListItem>
+        </List>
+      </div>
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
       >
-        <div className={classes.root}>
-          <List component="nav" className={classes.itemText}>
-            <ListItem>
-              <Button color="primary">
-                Set Headers
-              </Button>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <Button color="primary">
-                Export Query
-              </Button>
-            </ListItem>
-          </List>
-        </div>
-      </Popover>
+        <ExportModalContent
+          data={[name, code, mockedHeaders]}
+        />
+      </Modal>
     </div>
   )
 }
