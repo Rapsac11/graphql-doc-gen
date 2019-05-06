@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Hidden from '@material-ui/core/Hidden'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import dataObject from '../util/dataObject.js'
+import { queryTypeName, mutationTypeName } from '../util/constants/queryMutationTypes.js'
 import { navigate } from "gatsby"
 
 export default props => {
@@ -34,14 +35,27 @@ export default props => {
       <div className={classes.toolbar} />
       <Divider />
       <List>
+        <ListItem button onClick ={() => {
+          navigate('Query')
+        }}>
+          <ListItemText primary='Query' />
+        </ListItem>
+        <ListItem button onClick ={() => {
+          navigate('Mutation')
+        }}>
+          <ListItemText primary='Mutation' />
+        </ListItem>
+        <Divider />
         {
-          dataObject['__schema'].types.map((item, index) => (
-            <ListItem button key={item.name} onClick ={() => {
-              navigate(item.name.replace(/_/g, ""))
-            }}>
-              <ListItemText primary={item.name} />
-            </ListItem>
-          ))
+          dataObject['__schema'].types.map((item, index) => {
+            if(item.name !== queryTypeName && item.name !== mutationTypeName) {
+              return <ListItem button key={item.name} onClick ={() => {
+                navigate(item.name.replace(/_/g, ""))
+              }}>
+                <ListItemText primary={item.name} />
+              </ListItem>
+            }
+          })
         }
       </List>
     </div>
