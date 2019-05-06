@@ -1,23 +1,17 @@
-import React, { useState, useReducer } from 'react';
-import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/styles';
-import { navigate } from "gatsby"
+import React, { useState, useReducer } from 'react'
+import PropTypes from 'prop-types'
+import AppBar from '@material-ui/core/AppBar'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import IconButton from '@material-ui/core/IconButton'
+import MenuIcon from '@material-ui/icons/Menu'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles, useTheme } from '@material-ui/styles'
 import dataObject from '../util/dataObject'
 import { parse } from '../../scripts'
 import ObjectText from '../components/ObjectText'
 import ExerciseQuery from '../components/ExerciseQuery'
+import LeftPanel from '../components/LeftPanel.js'
 import withProviderHell from "./ProviderHell"
 import './styles.css'
 
@@ -27,12 +21,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     height: '100%'
-  },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
   },
   appBar: {
     marginLeft: drawerWidth,
@@ -94,24 +82,6 @@ function Main(props) {
     setMobileOpen(!mobileOpen);
   }
 
-  const drawer = (
-    <div>
-      <div className={classes.toolbar} />
-      <Divider />
-      <List>
-        {
-          dataObject['__schema'].types.map((item, index) => (
-            <ListItem button key={item.name} onClick ={() => {
-              navigate(item.name.replace(/_/g, ""))
-            }}>
-              <ListItemText primary={item.name} />
-            </ListItem>
-          ))
-        }
-      </List>
-    </div>
-  );
-
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -130,36 +100,12 @@ function Main(props) {
           </Typography>
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer}>
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true,
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+      <LeftPanel
+        drawerWidth={drawerWidth}
+        container={container}
+        handleDrawerToggle={handleDrawerToggle}
+        mobileOpen={mobileOpen}
+      />
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <div className='here' />
