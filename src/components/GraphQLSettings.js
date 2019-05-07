@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button'
 import Modal from '@material-ui/core/Modal'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import ExportModalContent from './ExportModalContent.js'
+import HeaderModalContent from './HeaderModalContent.js'
 import { QueryDispatchContext, QueryTextResponseContext, QueryResponseResponseContext } from '../reducers'
 
 const useStyles = makeStyles(theme => ({
@@ -39,7 +40,8 @@ const getModalStyle = () => {
 
 export default props => {
   const classes = useStyles()
-  const [modalOpen, setModalOpen] = useState(false)
+  const [exportModalOpen, setExportModalOpen] = useState(false)
+  const [headerModalOpen, setHeaderModalOpen] = useState(false)
   const [popAnchor, setPopAnchor] = useState(null)
   const { name, code, mockedHeaders }  = props
   return (
@@ -47,14 +49,16 @@ export default props => {
       <div className={classes.root}>
         <List component="nav" className={classes.itemText}>
           <ListItem>
-            <Button color="primary">
+            <Button
+              onClick={() => setHeaderModalOpen(true)}
+              color="primary">
               Set Headers
             </Button>
           </ListItem>
           <Divider />
           <ListItem>
             <Button
-              onClick={() => setModalOpen(true)}
+              onClick={() => setExportModalOpen(true)}
               color="primary">
               Export Query
             </Button>
@@ -62,12 +66,22 @@ export default props => {
         </List>
       </div>
       <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        aria-labelledby="Export"
+        aria-describedby="Export this query"
+        open={exportModalOpen}
+        onClose={() => setExportModalOpen(false)}
       >
         <ExportModalContent
+          data={[name, code, mockedHeaders]}
+        />
+      </Modal>
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={headerModalOpen}
+        onClose={() => setHeaderModalOpen(false)}
+      >
+        <HeaderModalContent
           data={[name, code, mockedHeaders]}
         />
       </Modal>
