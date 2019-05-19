@@ -81,6 +81,39 @@ const convertToQuery = lineArray => {
 
 const noop = () => {}
 
+const findBound = (ascending, fields, i) => {
+  let open = ascending ? '}' : '{'
+  let close = ascending ? '{' : '}'
+  let count = 1
+  let bound
+  fields.some((field, index) => {
+    if (field[field.length-1] === open){
+      count++
+    }
+    if (field[field.length-1] === close){
+      count--
+    }
+    if (count === 0){
+      if(ascending){
+        bound = i -index -1
+      } else {
+        bound = i + index
+      }
+      return true
+    }
+  })
+  return bound
+}
+
+const getBounds = (i, fields) => {
+  let upper = fields.slice(0,i).reverse()
+  let lower = fields.slice(i)
+  let upperBound = findBound(true, upper, i)
+  let lowerBound = findBound(false, lower, i)
+
+  return [upperBound, lowerBound]
+}
+
 export default props => {
   const { type } = props
   const queryTextDispatch = useContext(QueryTextDispatchContext)
@@ -103,7 +136,8 @@ export default props => {
           style={ hovered(i) == 'gray' ? hoveredTextLine : hovered(i) == 'blue' ? hoveredTextLineBlue : textLine }
           onClick={(event) => {
             if(typeof fields[i][0] !== 'string'){
-              if(isExpandable(event.target.innerHTML, dataObject)){
+              let containedType = isExpandable(event.target.innerHTML, dataObject)
+              if (containedType) {
                 let pos
                 fields[i].map((d, index) => {
                   if (d = event.target.innerHTML){
@@ -127,10 +161,7 @@ export default props => {
           onMouseEnter={() => {
             if(textRow[1] !== '}'){
               setHovering(
-                fields[i][0].collapse ? [
-                  i-fields[i][0].collapse.offset-1,
-                  i+fields[i][0].collapse.length-fields[i][0].collapse.offset,
-                ] : i
+                fields[i][0].collapse ? getBounds(i, fields) : i
               )
             }
             }}
