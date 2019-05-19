@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { parse, expand, collapse } from '../../scripts'
+import { parse, expand, collapse, isExpandable } from '../../scripts'
 import dataObject from '../util/dataObject'
 import { QueryTextDispatchContext } from '../reducers'
 import { baseTypes } from '../util/constants/baseTypes.js'
@@ -79,6 +79,8 @@ const convertToQuery = lineArray => {
   return hasVariables ? variables + ')' + query : query
 }
 
+const noop = () => {}
+
 export default props => {
   const { type } = props
   const queryTextDispatch = useContext(QueryTextDispatchContext)
@@ -99,9 +101,19 @@ export default props => {
           <div
           key={i}
           style={ hovered(i) == 'gray' ? hoveredTextLine : hovered(i) == 'blue' ? hoveredTextLineBlue : textLine }
-          onClick={() => {
+          onClick={(event) => {
             if(typeof fields[i][0] !== 'string'){
-              updateFields(collapse(fields[i][0].collapse, fields, i))
+              if(isExpandable(event.target.innerHTML, dataObject)){
+                let pos
+                fields[i].map((d, index) => {
+                  if (d = event.target.innerHTML){
+                    pos = index
+                  }
+                })
+                updateFields(expand(event.target.innerHTML, i, pos, fields, dataObject))
+              } else {
+                updateFields(collapse(fields[i][0].collapse, fields, i))
+              }
               setHovering(null)
             } else {
               if(hovered(i)){
@@ -133,9 +145,9 @@ export default props => {
                 args = [item, i, j, fields, dataObject]
                 clickFunction = expand
               } else {
-                item = chunk.text
-                args = [chunk.collapse, fields, i]
-                clickFunction = collapse
+                item = chunk ? chunk.text : null
+                args = chunk ? [chunk.collapse, fields, i, 'yo'] : []
+                clickFunction = noop
               }
                 return <span
                   key={j + 'span'}
